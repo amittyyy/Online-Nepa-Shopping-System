@@ -1,0 +1,20 @@
+﻿@using OnlineShopping.Helpers
+@model IEnumerable<OnlineShopping.Models.ProductScrollModel>
+<ul>
+    @foreach (var item in Model)
+    {
+        <li>
+            <span class="thumbnail">
+                <img style="width: 30px; height: 30px;" src="@string.Format("../../Images/Products/{0}",
+                                                                 (string.IsNullOrEmpty(item.Image)) ? "noimage.jpg" : item.Image)" />
+            </span>
+            <span class="info">
+                @Html.ActionLink(item.Title.LimitWithElipsesOnWordBoundary(20), "Detail", "Product", new { id = item.ProductId }, new { title = item.Title })
+                <span class="cat">@item.Category.LimitWithElipsesOnWordBoundary(30)</span>
+            </span>
+            <div class="clear"></div>
+        </li>
+    }
+</ul>
+<input type="hidden" id="maxPrdId" value="@Model.Max(x => x.ProductId)" />
+<input type="hidden" id="startId" value="@ViewBag.Start" />

@@ -1,0 +1,102 @@
+﻿@model OnlineShopping.Helpers.PaginatedList<OnlineShopping.UserLogin>
+
+@{
+    ViewBag.Title = "Admin Panel";
+}
+
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>Welcome to Admin Panel</h1>
+            </hgroup>
+            <p>
+                You have full control over all products and users via this panel
+            </p>
+        </div>
+    </section>
+}
+
+<table>
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            UserName
+        </th>
+        <th>
+            Email
+        </th>
+        <th>
+            Contact
+        </th>
+        <th>
+            Joined Date
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContactNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.JoinedDate)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Index", "User", new { id = item.UserId }, null)
+                @if (!Session["UserId"].Equals(item.UserId))
+                {
+                    <span>| @Html.ActionLink("Delete", "Delete", new { id = item.UserId })</span>
+                }
+            </td>
+        </tr>
+    }
+
+</table>
+<p>&nbsp;</p>
+<div style="text-align:center">
+    @if (Model.HasPreviousPage)
+    {
+        @Html.ActionLink("Previous", "Index", new { search = Model.SearchTerm, category = Model.Category, page = Model.PageIndex - 1 })
+    }
+    @{
+        var startingPage = Model.PageIndex - Model.NPages;
+        if (startingPage < 0)
+        {
+            startingPage = 0;
+        }
+        var endingPage = Model.PageIndex + Model.NPages;
+        if (endingPage > Model.TotalPages - 1)
+        {
+            endingPage = Model.TotalPages - 1;
+        }
+        for (var i = startingPage; i <= endingPage; ++i)
+        {
+            if (i == Model.PageIndex)
+            {
+                <span>@(i + 1)</span>
+            }
+            else
+            {
+                <span>@Html.ActionLink((i + 1).ToString(), "Index", new { search = Model.SearchTerm, category = Model.Category, page = i })</span>
+            }
+        }
+    }
+    @if (Model.HasNextPage)
+    {
+        @Html.ActionLink("Next", "Index", new { search = Model.SearchTerm, category = Model.Category, page = Model.PageIndex + 1 })
+    }
+</div>

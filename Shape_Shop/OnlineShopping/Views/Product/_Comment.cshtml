@@ -1,0 +1,83 @@
+﻿@using OnlineShopping.Helpers
+@model PaginatedList<OnlineShopping.Models.ProductComment>
+
+@{
+    Layout = null;
+}
+
+@foreach (var item in Model)
+{
+    if (Convert.ToBoolean(ViewBag.Owner))
+    {
+        <div style="text-align: right"><a style="text-decoration: none" onclick="delcmt(@item.ProductId, @item.UserCommentId, @Model.PageIndex)">x</a></div>
+    }
+    <div>@Html.ActionLink(item.FullName, "Index", "User", new { id = item.UserId }, null) says: @item.Comment</div>
+    <span style="font-size: smaller"> @item.Date.ToRelativeDate()</span>
+    <br />
+}
+<p>&nbsp;</p>
+<div style="text-align:center">
+    @if (Model.HasPreviousPage)
+    {
+        <a onclick="Cmts(@Model[0].ProductId, @(Model.PageIndex-1))">Previous</a>
+    }
+    @{
+        var startingPage = Model.PageIndex - Model.NPages;
+        if (startingPage < 0)
+        {
+            startingPage = 0;
+        }
+        var endingPage = Model.PageIndex + Model.NPages;
+        if (endingPage > Model.TotalPages - 1)
+        {
+            endingPage = Model.TotalPages - 1;
+        }
+        for (var i = startingPage; i <= endingPage; ++i)
+        {
+            if (i == Model.PageIndex)
+            {
+                <span>@(i + 1)</span>
+            }
+            else
+            {
+                <span>
+                    <a onclick="Cmts(@Model[0].ProductId, @i)">@(i + 1)</a>
+                </span>
+            }
+        }
+    }
+    @if (Model.HasNextPage)
+    {
+        <a onclick="Cmts(@Model[0].ProductId, @(Model.PageIndex + 1))">Next</a>
+    }
+</div>
+
+<script>
+    function Cmts(pid, page) {
+        $.ajax({
+            type: "GET",
+            url: "/Product/GetProductComments",
+            dataType: "html",
+            data: { id: pid, page: page },
+            success: function (response) {
+                console.log(JSON.stringify(response));
+                if (response.length >= 1)
+                    $('#comments').html(response);
+            }
+        });
+    }
+
+    function delcmt(pid, cmtId, page) {
+        $.ajax({
+            type: "GET",
+            url: "/Product/DeleteProductComment",
+            dataType: "html",
+            data: { id: pid, cmtId: cmtId, page: page },
+            success: function (response) {
+                console.log(JSON.stringify(response));
+                if (response.length >= 1)
+                    $('#comments').html(response);
+            }
+        });
+    }
+</script>

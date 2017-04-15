@@ -1,0 +1,70 @@
+﻿@model OnlineShopping.Models.UserDisplayModel
+
+@{
+    ViewBag.Title = "User Details";
+}
+
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>@Model.FullName</h1>
+            </hgroup>
+            <p>
+                User details and history
+            </p>
+        </div>
+    </section>
+}
+
+<hr />
+<br />
+<fieldset>
+    <legend>UserDisplayModel</legend>
+
+    <div class="display-field">
+        @Html.DisplayNameFor(model => model.ContactNumber): @Html.DisplayFor(model => model.ContactNumber)
+    </div>
+
+    <div class="display-field">
+        @Html.DisplayNameFor(model => model.Email): @Html.DisplayFor(model => model.Email)
+    </div>
+
+    <div class="display-field">
+        @Html.DisplayNameFor(model => model.Address): @Html.DisplayFor(model => model.Address)
+    </div>
+
+    <div class="display-field">
+        @Html.DisplayNameFor(model => model.Date): @Model.Date.ToLongDateString()
+    </div>
+
+    <div class="display-field">
+        @Html.DisplayNameFor(model => model.TotalProducts): @Html.DisplayFor(model => model.TotalProducts)
+    </div>
+
+    <div class="display-field">
+        @Html.DisplayNameFor(model => model.TotalLikes): @Html.DisplayFor(model => model.TotalLikes)
+    </div>
+
+    <div class="display-field">
+        @Html.DisplayNameFor(model => model.TotalDislikes): @Html.DisplayFor(model => model.TotalDislikes)
+    </div>
+
+    <div class="display-field">
+        @Html.DisplayNameFor(model => model.TotalJobPostings): @Html.DisplayFor(model => model.TotalJobPostings)
+    </div>
+</fieldset>
+<p>
+    @if (Model.UserId == Convert.ToInt32(Session["UserId"]))
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.UserId })
+    }
+    else if (Session["UserName"] != null && Session["UserName"].ToString().StartsWith("admin", StringComparison.OrdinalIgnoreCase))
+    {
+        <br />
+        @Html.ActionLink("Remove", "Delete", "Admin", new { id = Model.UserId }, null)
+        <br />
+    }
+    <br />
+    <hr />
+</p>

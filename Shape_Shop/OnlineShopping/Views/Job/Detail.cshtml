@@ -1,0 +1,108 @@
+﻿@using OnlineShopping.Helpers
+@model OnlineShopping.Models.JobModel
+
+@{
+    ViewBag.Title = "Job Details";
+}
+
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>@Model.Title</h1>
+            </hgroup>
+            <p>
+                @Model.CompanyName
+            </p>
+        </div>
+    </section>
+}
+
+<br />
+<fieldset>
+    <legend>JobModel</legend>
+    <div style="font-weight: bold; color: royalblue">
+        Job Overview
+        <hr style="color: royalblue" />
+    </div>
+    <div class="display-field">
+        Category: @Html.DisplayFor(model => model.CategoryName)
+    </div>
+
+    <div class="display-field">
+        Salary: @Html.DisplayFor(model => model.Salary)
+    </div>
+
+    <div class="display-field">
+        Experience: @Html.DisplayFor(model => model.Experience)
+    </div>
+
+    <div class="display-field">
+        Openings: @Html.DisplayFor(model => model.Openings)
+    </div>
+
+    <div class="display-field">
+        Education: @Html.DisplayFor(model => model.Education)
+    </div>
+
+    <div class="display-field">
+        City: @Html.DisplayFor(model => model.City)
+    </div>
+
+    <div class="display-field">
+        Contact: @Html.DisplayFor(model => model.Contact)
+    </div>
+
+    <div class="display-field">
+        Mail:
+        <a title="If your browser is setup for email, clicking here will let you send us an email." href="@string.Format("mailto:{0}?subject=With regard to the job posting '{1}' on Cosmos website", Model.Email, Model.Title)">@Model.Email</a>
+    </div>
+
+    <div class="display-field">
+        Url: @Html.DisplayFor(model => model.Url)
+    </div>
+
+    <div class="display-field">
+        @Html.DisplayNameFor(model => model.Posted): @Model.Posted.ToLongDateString()
+    </div>
+
+    <div class="display-field">
+        @Html.DisplayNameFor(model => model.LastDate): @Model.LastDate.ToLongDateString()
+        @if (Model.LastDate.Date >= DateTime.Today)
+        {
+            <span>
+                [@((Model.LastDate.Date - DateTime.Today).Days)
+                days left]
+            </span>
+        }
+    </div>
+    <div>Posted by: @Html.ActionLink(Model.UserName, "Index", "User", new { id = Model.UserId }, null)</div>
+
+    <p>&nbsp;</p>
+    <div style="font-weight: bold; color: royalblue">
+        Detailed Job Description / Requirements
+        <hr style="color: royalblue" />
+    </div>
+    <div>@Html.EncodedMultiLineText(Model.Requirements)</div>
+
+    <p>&nbsp;</p>
+    <div style="font-weight: bold; color: royalblue">
+        Detailed Specifications
+        <hr style="color: royalblue" />
+    </div>
+    <div>@Html.EncodedMultiLineText(Model.Specifications)</div>
+
+</fieldset>
+<p>&nbsp;</p>
+<p>
+    @if (Model.UserId == Convert.ToInt32(Session["UserId"]))
+    {
+        if (Model.LastDate.Date >= DateTime.Today)
+        {
+            @Html.ActionLink("Edit", "Edit", new { id = Model.JobId })
+            <span>|</span>
+        }
+        @Html.ActionLink("Delete", "Delete", new { id = Model.JobId });
+        <hr />
+    }
+</p>

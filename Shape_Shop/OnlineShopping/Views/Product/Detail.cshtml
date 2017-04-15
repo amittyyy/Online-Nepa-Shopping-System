@@ -1,0 +1,103 @@
+﻿@model OnlineShopping.Models.ProductListingModel
+
+@{
+    ViewBag.Title = "Product Detail";
+}
+
+
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>@Model.ProductName</h1>
+            </hgroup>
+            <p>
+                Available since @Model.Added.ToLongDateString()
+            </p>
+        </div>
+    </section>
+}
+
+<script>
+    function LikeDislike(pid, up) {
+        $.ajax({
+            type: "GET",
+            url: "/Product/ThumbsUpDown",
+            dataType: "html",
+            data: { id: pid, up: up },
+            success: function (response) {
+                console.log(JSON.stringify(response));
+                if (response.length >= 1)
+                    $('#thumb').html(response);
+            }
+        });
+    }
+
+</script>
+<hr />
+<p>&nbsp;</p>
+<fieldset>
+    @Html.HiddenFor(x => x.ProductId)
+    <img style="height: 400px; width: 300px;" src=@string.Concat("../../Images/Products/", string.IsNullOrEmpty(Model.Image) ? "noimage.jpg" : Model.Image)
+         alt="@Model.ProductName" />
+    <div id="thumb">
+        @Html.Partial("_thumbs", Model.Thumbs)
+    </div>
+    <div class="display-field">
+        Seller Name: @Html.ActionLink(Model.FullName, "Index", "User", new { id = Model.UserId }, null)
+    </div>
+    <div class="display-field">
+        Condition: @if (Model.IsUsed)
+        {@:Used
+              }
+        else
+        { @:New
+         }
+    </div>
+    <div class="display-field">
+        Price: Rs. @Html.DisplayFor(model => model.Price)
+    </div>
+    <div class="display-field">
+        Contact:  @Html.DisplayFor(model => model.ContactNumber)
+    </div>
+    <div class="display-field">
+        Email:
+        <a title="If your browser is setup for email, clicking here will let you send us an email." href="@string.Format("mailto:{0}?subject=With regard to the product posting '{1}' on Cosmos website", Model.Email, Model.ProductName)">@Model.Email</a>
+    </div>
+    <div class="display-label">
+        Category: @Model.MainProductCategory
+    </div>
+    <div class="display-field">
+        Date Added:  @Html.DisplayFor(model => model.Added)
+    </div>
+    <div class="display-field">
+        Description:  @Html.DisplayFor(model => model.Description)
+    </div>
+</fieldset>
+<p>&nbsp;</p>
+<p>
+    @if (Model.UserId == Convert.ToInt32(Session["UserId"]))
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ProductId }) <span>|</span>
+        @Html.ActionLink("Delete", "Delete", new { id = Model.ProductId });
+        <hr />
+    }
+    else if (Session["UserName"] != null && Session["UserName"].ToString().StartsWith("admin", StringComparison.OrdinalIgnoreCase))
+    {
+        @Html.ActionLink("Remove", "Delete", "Home", new { id = Model.ProductId, uri = Url.Action("Index", "Home") }, new { title = "Remove " + Model.ProductName })
+    }
+</p>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p><p>&nbsp;</p>
+<h4>Viewer's Comments</h4>
+<hr />
+<br />
+<div id="comments">
+    @Html.Action("GetProductComments", Model.ProductId)
+</div>
+@if (Session["UserId"] != null)
+{
+    @Html.Partial("_MakeComment")
+}
+<hr />

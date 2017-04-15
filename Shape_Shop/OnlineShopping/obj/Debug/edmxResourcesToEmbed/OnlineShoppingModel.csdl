@@ -1,0 +1,350 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="OnlineShoppingModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="OnlineShoppingEntity" p1:LazyLoadingEnabled="true">
+    <EntitySet Name="UserComments" EntityType="OnlineShoppingModel.UserComment" />
+    <EntitySet Name="UserLogins" EntityType="OnlineShoppingModel.UserLogin" />
+    <AssociationSet Name="FK_UserComment_UserLogin" Association="OnlineShoppingModel.FK_UserComment_UserLogin">
+      <End Role="UserLogin" EntitySet="UserLogins" />
+      <End Role="UserComment" EntitySet="UserComments" />
+    </AssociationSet>
+    <EntitySet Name="ProductThumbs" EntityType="OnlineShoppingModel.ProductThumb" />
+    <AssociationSet Name="FK_ProductThumb_UserLogin" Association="OnlineShoppingModel.FK_ProductThumb_UserLogin">
+      <End Role="UserLogin" EntitySet="UserLogins" />
+      <End Role="ProductThumb" EntitySet="ProductThumbs" />
+    </AssociationSet>
+    <EntitySet Name="JobCategories" EntityType="OnlineShoppingModel.JobCategory" />
+    <EntitySet Name="JobPostings" EntityType="OnlineShoppingModel.JobPosting" />
+    <AssociationSet Name="FK_JobPosting_JobCategory" Association="OnlineShoppingModel.FK_JobPosting_JobCategory">
+      <End Role="JobCategory" EntitySet="JobCategories" />
+      <End Role="JobPosting" EntitySet="JobPostings" />
+    </AssociationSet>
+    <AssociationSet Name="FK_JobPosting_UserLogin" Association="OnlineShoppingModel.FK_JobPosting_UserLogin">
+      <End Role="UserLogin" EntitySet="UserLogins" />
+      <End Role="JobPosting" EntitySet="JobPostings" />
+    </AssociationSet>
+    <EntitySet Name="Products" EntityType="OnlineShoppingModel.Product" />
+    <AssociationSet Name="FK_Product_UserLogin" Association="OnlineShoppingModel.FK_Product_UserLogin">
+      <End Role="UserLogin" EntitySet="UserLogins" />
+      <End Role="Product" EntitySet="Products" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductThumb_Product" Association="OnlineShoppingModel.FK_ProductThumb_Product">
+      <End Role="Product" EntitySet="Products" />
+      <End Role="ProductThumb" EntitySet="ProductThumbs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserComment_Product" Association="OnlineShoppingModel.FK_UserComment_Product">
+      <End Role="Product" EntitySet="Products" />
+      <End Role="UserComment" EntitySet="UserComments" />
+    </AssociationSet>
+    <EntitySet Name="Notifications" EntityType="OnlineShoppingModel.Notification" />
+    <AssociationSet Name="FK_Notification_Product" Association="OnlineShoppingModel.FK_Notification_Product">
+      <End Role="Product" EntitySet="Products" />
+      <End Role="Notification" EntitySet="Notifications" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Notification_UserLogin" Association="OnlineShoppingModel.FK_Notification_UserLogin">
+      <End Role="UserLogin" EntitySet="UserLogins" />
+      <End Role="Notification" EntitySet="Notifications" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Notification_UserLogin1" Association="OnlineShoppingModel.FK_Notification_UserLogin1">
+      <End Role="UserLogin" EntitySet="UserLogins" />
+      <End Role="Notification" EntitySet="Notifications" />
+    </AssociationSet>
+    <EntitySet Name="MainCategories" EntityType="OnlineShoppingModel.MainCategory" />
+    <EntitySet Name="ProductCategories" EntityType="OnlineShoppingModel.ProductCategory" />
+    <AssociationSet Name="FK_ProductCategory_MainCategory" Association="OnlineShoppingModel.FK_ProductCategory_MainCategory">
+      <End Role="MainCategory" EntitySet="MainCategories" />
+      <End Role="ProductCategory" EntitySet="ProductCategories" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Product_ProductCategory" Association="OnlineShoppingModel.FK_Product_ProductCategory">
+      <End Role="ProductCategory" EntitySet="ProductCategories" />
+      <End Role="Product" EntitySet="Products" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="UserComment">
+    <Key>
+      <PropertyRef Name="UserCommentId" />
+    </Key>
+    <Property Name="UserCommentId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProductId" Type="Int32" Nullable="false" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="Comment" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="2" />
+    <NavigationProperty Name="UserLogin" Relationship="OnlineShoppingModel.FK_UserComment_UserLogin" FromRole="UserComment" ToRole="UserLogin" />
+    <NavigationProperty Name="Product" Relationship="OnlineShoppingModel.FK_UserComment_Product" FromRole="UserComment" ToRole="Product" />
+  </EntityType>
+  <EntityType Name="UserLogin">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FullName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="UserName" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="Password" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+    <Property Name="PasswordSalt" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+    <Property Name="Email" Type="String" Nullable="false" MaxLength="320" FixedLength="false" Unicode="false" />
+    <Property Name="ContactNumber" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="Address" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+    <Property Name="JoinedDate" Type="DateTime" Nullable="false" Precision="2" />
+    <NavigationProperty Name="UserComments" Relationship="OnlineShoppingModel.FK_UserComment_UserLogin" FromRole="UserLogin" ToRole="UserComment" />
+    <NavigationProperty Name="ProductThumbs" Relationship="OnlineShoppingModel.FK_ProductThumb_UserLogin" FromRole="UserLogin" ToRole="ProductThumb" />
+    <NavigationProperty Name="JobPostings" Relationship="OnlineShoppingModel.FK_JobPosting_UserLogin" FromRole="UserLogin" ToRole="JobPosting" />
+    <NavigationProperty Name="Products" Relationship="OnlineShoppingModel.FK_Product_UserLogin" FromRole="UserLogin" ToRole="Product" />
+    <NavigationProperty Name="Notifications" Relationship="OnlineShoppingModel.FK_Notification_UserLogin" FromRole="UserLogin" ToRole="Notification" />
+    <NavigationProperty Name="Notifications1" Relationship="OnlineShoppingModel.FK_Notification_UserLogin1" FromRole="UserLogin" ToRole="Notification" />
+  </EntityType>
+  <Association Name="FK_UserComment_UserLogin">
+    <End Type="OnlineShoppingModel.UserLogin" Role="UserLogin" Multiplicity="1" />
+    <End Type="OnlineShoppingModel.UserComment" Role="UserComment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserLogin">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="UserComment">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="ProductThumb">
+    <Key>
+      <PropertyRef Name="ProductThumbId" />
+    </Key>
+    <Property Name="ProductThumbId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProductId" Type="Int32" Nullable="false" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="Up" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="UserLogin" Relationship="OnlineShoppingModel.FK_ProductThumb_UserLogin" FromRole="ProductThumb" ToRole="UserLogin" />
+    <NavigationProperty Name="Product" Relationship="OnlineShoppingModel.FK_ProductThumb_Product" FromRole="ProductThumb" ToRole="Product" />
+  </EntityType>
+  <Association Name="FK_ProductThumb_UserLogin">
+    <End Type="OnlineShoppingModel.UserLogin" Role="UserLogin" Multiplicity="1" />
+    <End Type="OnlineShoppingModel.ProductThumb" Role="ProductThumb" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserLogin">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="ProductThumb">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="JobCategory">
+    <Key>
+      <PropertyRef Name="JobCategoryId" />
+    </Key>
+    <Property Name="JobCategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="JobPostings" Relationship="OnlineShoppingModel.FK_JobPosting_JobCategory" FromRole="JobCategory" ToRole="JobPosting" />
+  </EntityType>
+  <EntityType Name="JobPosting">
+    <Key>
+      <PropertyRef Name="JobId" />
+    </Key>
+    <Property Name="JobId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="CompanyName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="Title" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="JobCategoryId" Type="Int32" Nullable="false" />
+    <Property Name="Salary" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Experience" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Openings" Type="Byte" />
+    <Property Name="Education" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="City" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+    <Property Name="Requirements" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Specifications" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Contact" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="URL" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Added" Type="DateTime" Nullable="false" Precision="2" />
+    <NavigationProperty Name="JobCategory" Relationship="OnlineShoppingModel.FK_JobPosting_JobCategory" FromRole="JobPosting" ToRole="JobCategory" />
+    <NavigationProperty Name="UserLogin" Relationship="OnlineShoppingModel.FK_JobPosting_UserLogin" FromRole="JobPosting" ToRole="UserLogin" />
+  </EntityType>
+  <Association Name="FK_JobPosting_JobCategory">
+    <End Type="OnlineShoppingModel.JobCategory" Role="JobCategory" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="OnlineShoppingModel.JobPosting" Role="JobPosting" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="JobCategory">
+        <PropertyRef Name="JobCategoryId" />
+      </Principal>
+      <Dependent Role="JobPosting">
+        <PropertyRef Name="JobCategoryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_JobPosting_UserLogin">
+    <End Type="OnlineShoppingModel.UserLogin" Role="UserLogin" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="OnlineShoppingModel.JobPosting" Role="JobPosting" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserLogin">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="JobPosting">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Product">
+    <Key>
+      <PropertyRef Name="ProductId" />
+    </Key>
+    <Property Name="ProductId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="Image" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="Description" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="false" />
+    <Property Name="Price" Type="Double" Nullable="false" />
+    <Property Name="Added" Type="DateTime" Nullable="false" Precision="2" />
+    <Property Name="ExpiryDate" Type="DateTime" Nullable="false" Precision="2" />
+    <Property Name="IsUsed" Type="Boolean" Nullable="false" />
+    <Property Name="ProductCategoryId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="UserLogin" Relationship="OnlineShoppingModel.FK_Product_UserLogin" FromRole="Product" ToRole="UserLogin" />
+    <NavigationProperty Name="ProductThumbs" Relationship="OnlineShoppingModel.FK_ProductThumb_Product" FromRole="Product" ToRole="ProductThumb" />
+    <NavigationProperty Name="UserComments" Relationship="OnlineShoppingModel.FK_UserComment_Product" FromRole="Product" ToRole="UserComment" />
+    <NavigationProperty Name="Notifications" Relationship="OnlineShoppingModel.FK_Notification_Product" FromRole="Product" ToRole="Notification" />
+    <NavigationProperty Name="ProductCategory" Relationship="OnlineShoppingModel.FK_Product_ProductCategory" FromRole="Product" ToRole="ProductCategory" />
+  </EntityType>
+  <Association Name="FK_Product_UserLogin">
+    <End Type="OnlineShoppingModel.UserLogin" Role="UserLogin" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="OnlineShoppingModel.Product" Role="Product" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserLogin">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="Product">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductThumb_Product">
+    <End Type="OnlineShoppingModel.Product" Role="Product" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="OnlineShoppingModel.ProductThumb" Role="ProductThumb" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="ProductId" />
+      </Principal>
+      <Dependent Role="ProductThumb">
+        <PropertyRef Name="ProductId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserComment_Product">
+    <End Type="OnlineShoppingModel.Product" Role="Product" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="OnlineShoppingModel.UserComment" Role="UserComment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="ProductId" />
+      </Principal>
+      <Dependent Role="UserComment">
+        <PropertyRef Name="ProductId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Notification">
+    <Key>
+      <PropertyRef Name="NotificationId" />
+    </Key>
+    <Property Name="NotificationId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="OriginatorId" Type="Int32" Nullable="false" />
+    <Property Name="SentDate" Type="DateTime" Nullable="false" Precision="2" />
+    <Property Name="ReadDate" Type="DateTime" Precision="2" />
+    <Property Name="NotificationTypeId" Type="Byte" Nullable="false" />
+    <Property Name="ProductId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Product" Relationship="OnlineShoppingModel.FK_Notification_Product" FromRole="Notification" ToRole="Product" />
+    <NavigationProperty Name="UserLogin" Relationship="OnlineShoppingModel.FK_Notification_UserLogin" FromRole="Notification" ToRole="UserLogin" />
+    <NavigationProperty Name="UserLogin1" Relationship="OnlineShoppingModel.FK_Notification_UserLogin1" FromRole="Notification" ToRole="UserLogin" />
+  </EntityType>
+  <Association Name="FK_Notification_Product">
+    <End Type="OnlineShoppingModel.Product" Role="Product" Multiplicity="1" />
+    <End Type="OnlineShoppingModel.Notification" Role="Notification" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="ProductId" />
+      </Principal>
+      <Dependent Role="Notification">
+        <PropertyRef Name="ProductId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Notification_UserLogin">
+    <End Type="OnlineShoppingModel.UserLogin" Role="UserLogin" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="OnlineShoppingModel.Notification" Role="Notification" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserLogin">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="Notification">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Notification_UserLogin1">
+    <End Type="OnlineShoppingModel.UserLogin" Role="UserLogin" Multiplicity="1" />
+    <End Type="OnlineShoppingModel.Notification" Role="Notification" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserLogin">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="Notification">
+        <PropertyRef Name="OriginatorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="MainCategory">
+    <Key>
+      <PropertyRef Name="MainCategoryId" />
+    </Key>
+    <Property Name="MainCategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="ProductCategories" Relationship="OnlineShoppingModel.FK_ProductCategory_MainCategory" FromRole="MainCategory" ToRole="ProductCategory" />
+  </EntityType>
+  <EntityType Name="ProductCategory">
+    <Key>
+      <PropertyRef Name="ProductCategoryId" />
+    </Key>
+    <Property Name="ProductCategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="MainCategoryId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="MainCategory" Relationship="OnlineShoppingModel.FK_ProductCategory_MainCategory" FromRole="ProductCategory" ToRole="MainCategory" />
+    <NavigationProperty Name="Products" Relationship="OnlineShoppingModel.FK_Product_ProductCategory" FromRole="ProductCategory" ToRole="Product" />
+  </EntityType>
+  <Association Name="FK_ProductCategory_MainCategory">
+    <End Type="OnlineShoppingModel.MainCategory" Role="MainCategory" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="OnlineShoppingModel.ProductCategory" Role="ProductCategory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MainCategory">
+        <PropertyRef Name="MainCategoryId" />
+      </Principal>
+      <Dependent Role="ProductCategory">
+        <PropertyRef Name="MainCategoryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Product_ProductCategory">
+    <End Type="OnlineShoppingModel.ProductCategory" Role="ProductCategory" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="OnlineShoppingModel.Product" Role="Product" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductCategory">
+        <PropertyRef Name="ProductCategoryId" />
+      </Principal>
+      <Dependent Role="Product">
+        <PropertyRef Name="ProductCategoryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

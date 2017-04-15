@@ -1,0 +1,75 @@
+﻿@model OnlineShopping.Helpers.PaginatedList<OnlineShopping.Models.ProductThumbModel>
+
+@{
+    ViewBag.Title = "Thumbs providers";
+}
+
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>Thumbs Providers</h1>
+            </hgroup>
+            <p>
+                List of users who have liked/disliked your product
+            </p>
+        </div>
+    </section>
+}
+
+<table>
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Email
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.ActionLink(item.FirstName, "Index", "User", new { id = item.UserId }, null)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+        </tr>
+    }
+</table>
+<p>&nbsp;</p>
+<div style="text-align:center">
+    @if (Model.HasPreviousPage)
+    {
+        @Html.ActionLink("Previous", "Index", new { search = Model.SearchTerm, category = Model.Category, page = Model.PageIndex - 1 })
+    }
+    @{
+        var startingPage = Model.PageIndex - Model.NPages;
+        if (startingPage < 0)
+        {
+            startingPage = 0;
+        }
+        var endingPage = Model.PageIndex + Model.NPages;
+        if (endingPage > Model.TotalPages - 1)
+        {
+            endingPage = Model.TotalPages - 1;
+        }
+        for (var i = startingPage; i <= endingPage; ++i)
+        {
+            if (i == Model.PageIndex)
+            {
+                <span>@(i + 1)</span>
+            }
+            else
+            {
+                <span>@Html.ActionLink((i + 1).ToString(), "Index", new { search = Model.SearchTerm, category = Model.Category, page = i })</span>
+            }
+        }
+    }
+    @if (Model.HasNextPage)
+    {
+        @Html.ActionLink("Next", "Index", new { search = Model.SearchTerm, category = Model.Category, page = Model.PageIndex + 1 })
+    }
+</div>

@@ -1,0 +1,12 @@
+﻿@model List<SelectListItem>
+<ul style="list-style: none">
+    <li><a style="text-decoration:none" href="~/Home/Index">None</a></li>
+    @foreach (var item in Model)
+    {
+        <li>
+            <a style="text-decoration:none" href="~/Home/Index?category=@item.Value">
+                @item.Text
+            </a>
+        </li>
+    }
+</ul>

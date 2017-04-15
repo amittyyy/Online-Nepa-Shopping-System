@@ -1,0 +1,32 @@
+﻿@{
+    Layout = null;
+}
+<br />
+<hr />
+<div>Post a comment:</div>
+@using (Ajax.BeginForm("GetSubCategories", "Product", new AjaxOptions { UpdateTargetId = "comments" }))
+{
+    <textarea id="newcomment" rows="4" cols="50"></textarea>
+    <br />
+    <span style="font-size: smaller">*Comments once posted, cannot be edited/removed. Post owner will be notified of all posted comments.</span>
+    <br />
+    <input type="button" value="Submit" id="submitcomment" />
+}
+
+<script type="text/javascript">
+    $('#submitcomment').click(function () {
+        $.ajax({
+            url: "@Url.Action("SetProductComment", "Product")",
+            type: "GET",
+            dataType: "html",
+            data: { productId: $('#ProductId').val(), comment: $('#newcomment').val() },
+            success: function (data) {
+                $("#comments").html(data);
+                $("#newcomment").val('');
+            },
+            error: function (XMLHttpRequest, textStatus, error) {
+                alert(error);
+            }
+        });
+    });
+</script>

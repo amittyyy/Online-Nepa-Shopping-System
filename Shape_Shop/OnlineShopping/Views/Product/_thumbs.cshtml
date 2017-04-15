@@ -1,0 +1,50 @@
+﻿@model OnlineShopping.Models.ProductInfoModel
+
+@if (@Model.Up <= 0)
+{
+    <span>@Model.Up</span>
+}
+else
+{
+    <span>@Html.ActionLink(Model.Up.ToString(), "ThumbsDetail", "Product", new { id = Model.ProductId, up = true }, null) </span>
+}
+
+@if (Session["UserId"] != null)
+{
+    if (Model.YourResponse.HasValue && Model.YourResponse.Value)
+    {
+        <a id="btnUp" onclick="LikeDislike(@Model.ProductId, 2) ">Unlike</a>
+    }
+    else
+    {
+        <a id="btnUp" onclick="LikeDislike(@Model.ProductId, 1) ">Like</a>
+    }
+}
+else
+{
+    @:Likes
+}
+|
+@if (@Model.Down <= 0)
+{
+    <span>@Model.Down</span>
+}
+else
+{
+    <span>@Html.ActionLink(Model.Down.ToString(), "ThumbsDetail", "Product", new { id = Model.ProductId, up = false }, null) </span>
+}
+@if (Session["UserId"] != null)
+{
+    if (Model.YourResponse.HasValue && !Model.YourResponse.Value)
+    {
+        <a id="btnDown" onclick="LikeDislike(@Model.ProductId, 2) ">Undislike</a>
+    }
+    else
+    {
+        <a id="btnDown" onclick="LikeDislike(@Model.ProductId, 0) ">Dislike</a>
+    }
+}
+else
+{
+    @:Dislikes
+}

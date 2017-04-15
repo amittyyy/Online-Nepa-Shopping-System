@@ -1,0 +1,34 @@
+﻿@model OnlineShopping.Models.ProductModel
+
+@{
+    Layout = null;
+}
+
+@using (Ajax.BeginForm("GetSubCategories", "Product", new AjaxOptions { UpdateTargetId = "SubCategories" }))
+{
+    @Html.DropDownListFor(
+            m => m.SubCategoryId,
+            Model.SubCategories
+        )
+}
+<script type="text/javascript">
+    $('#MainCategoryId').on("change", function () {
+        $.ajax({
+            url: "@Url.Action("GetSubCategories", "Product")",
+            type: "GET",
+            dataType: "json",
+            data: { id: $('#MainCategoryId').val() },
+            success: function (data) {
+                var mySelect = $('#SubCategoryId');
+                mySelect.empty();
+                var sel = true;
+                $(data).each(function () {
+                    mySelect.append(new Option(this['Text'], this['Value'], false, sel));
+                    if (sel) sel = !sel;
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, error) {
+            }
+        });
+    });
+</script>

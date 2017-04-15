@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="099d15faf7a54f18953aa69225b7f5ab" Name="Main">
+        <EntityTypeShape EntityType="OnlineShoppingModel.UserComment" Width="1.5" PointX="3" PointY="5.125" />
+        <EntityTypeShape EntityType="OnlineShoppingModel.UserLogin" Width="1.5" PointX="0.75" PointY="7.375" />
+        <AssociationConnector Association="OnlineShoppingModel.FK_UserComment_UserLogin" />
+        <EntityTypeShape EntityType="OnlineShoppingModel.ProductThumb" Width="1.5" PointX="3" PointY="8.25" />
+        <AssociationConnector Association="OnlineShoppingModel.FK_ProductThumb_UserLogin" />
+        <EntityTypeShape EntityType="OnlineShoppingModel.JobCategory" Width="1.5" PointX="3.75" PointY="2.5" />
+        <EntityTypeShape EntityType="OnlineShoppingModel.JobPosting" Width="1.5" PointX="6" PointY="7" />
+        <AssociationConnector Association="OnlineShoppingModel.FK_JobPosting_JobCategory" />
+        <AssociationConnector Association="OnlineShoppingModel.FK_JobPosting_UserLogin" />
+        <EntityTypeShape EntityType="OnlineShoppingModel.Product" Width="1.5" PointX="3" PointY="11.375" />
+        <AssociationConnector Association="OnlineShoppingModel.FK_Product_UserLogin" />
+        <AssociationConnector Association="OnlineShoppingModel.FK_ProductThumb_Product" />
+        <AssociationConnector Association="OnlineShoppingModel.FK_UserComment_Product" />
+        <EntityTypeShape EntityType="OnlineShoppingModel.Notification" Width="1.5" PointX="5.25" PointY="12.75" />
+        <AssociationConnector Association="OnlineShoppingModel.FK_Notification_Product" />
+        <AssociationConnector Association="OnlineShoppingModel.FK_Notification_UserLogin" />
+        <AssociationConnector Association="OnlineShoppingModel.FK_Notification_UserLogin1" />
+        <EntityTypeShape EntityType="OnlineShoppingModel.MainCategory" Width="1.5" PointX="1.5" PointY="16.5" />
+        <EntityTypeShape EntityType="OnlineShoppingModel.ProductCategory" Width="1.5" PointX="0.75" PointY="12.25" />
+        <AssociationConnector Association="OnlineShoppingModel.FK_ProductCategory_MainCategory" />
+        <AssociationConnector Association="OnlineShoppingModel.FK_Product_ProductCategory" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,109 @@
+﻿@using OnlineShopping.Helpers
+@model OnlineShopping.Helpers.PaginatedList<OnlineShopping.Models.ProductListingModel>
+@{
+    ViewBag.Title = "Product";
+}
+
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>My Products</h1>
+            </hgroup>
+            <p>
+                List of all products you have ever posted
+            </p>
+        </div>
+    </section>
+}
+
+<h4>@Html.ActionLink("Post New", "Create")</h4>
+@{
+    var list = Model.ToList();
+    int numberOfItemsInARow = ViewBag.ItemsInRow;
+}
+@if (list.Count > 0)
+{
+    <table>
+        <tr>
+            @for (var i = 0; i < list.Count(); ++i)
+            {
+                <td>
+                    <table>
+                        <tr>
+                            <td style="vertical-align: central">
+                                <img style="height: 60px; width: 60px;" src=@string.Concat("../../Images/Products/", (string.IsNullOrEmpty(list[i].Image)) ? "NoImage.jpg" : list[i].Image) alt="@list[i].ProductName" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: smaller">@list[i].Thumbs.Up Likes | @list[i].Thumbs.Down Dislikes | @list[i].Thumbs.Comments Comments</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>@Html.ActionLink(@list[i].ProductName.LimitWithElipsesOnWordBoundary(24), "Detail", "Product", new { id = list[i].ProductId }, new { title = list[i].ProductName }) </strong>@{
+                                                                                                                                                     if (!list[i].IsUsed)
+                                                                                                                                                     {
+                                                                                                                                                         <span>[New]</span>
+                                                                                                                                                     }
+                                                                                                                                                 }
+                            </td>
+                        </tr>
+                        <tr><td>Price: RS: @list[i].Price /- </td></tr>
+                        <tr>
+                            <td>Category: @list[i].MainProductCategory</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Posted: @list[i].Added
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                if (i + 1 >= numberOfItemsInARow && (i + 1)%numberOfItemsInARow == 0)
+                {
+                    @:</tr><tr>
+                }
+
+            }
+        </tr>
+    </table>
+}
+else
+{
+    <p>&nbsp;</p>
+    <div>You have not posted any product yet.</div>
+}
+<p>&nbsp;</p>
+<div style="text-align:center">
+    @if (Model.HasPreviousPage)
+    {
+        @Html.ActionLink("Previous", "Index", new { search = Model.SearchTerm, category = Model.Category, page = Model.PageIndex - 1 })
+    }
+    @{
+        var startingPage = Model.PageIndex - Model.NPages;
+        if (startingPage < 0)
+        {
+            startingPage = 0;
+        }
+        var endingPage = Model.PageIndex + Model.NPages;
+        if (endingPage > Model.TotalPages - 1)
+        {
+            endingPage = Model.TotalPages - 1;
+        }
+        for (var i = startingPage; i <= endingPage; ++i)
+        {
+            if (i == Model.PageIndex)
+            {
+                <span>@(i + 1)</span>
+            }
+            else
+            {
+                <span>@Html.ActionLink((i + 1).ToString(), "Index", new { search = Model.SearchTerm, category = Model.Category, page = i })</span>
+            }
+        }
+    }
+    @if (Model.HasNextPage)
+    {
+        @Html.ActionLink("Next", "Index", new { search = Model.SearchTerm, category = Model.Category, page = Model.PageIndex + 1 })
+    }
+</div>

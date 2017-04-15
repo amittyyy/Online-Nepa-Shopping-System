@@ -1,0 +1,94 @@
+﻿@using OnlineShopping.Helpers
+@model OnlineShopping.Helpers.PaginatedList<OnlineShopping.Models.NotificationModel>
+
+@{
+    ViewBag.Title = "Notifications";
+}
+
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>Notifications</h1>
+            </hgroup>
+            <p>
+                List of notifications
+            </p>
+        </div>
+    </section>
+}
+
+@if (Model.Any())
+{
+    var dateTuple = string.Empty;
+    <table style="width: 100%">
+        @foreach (var item in Model)
+        {
+            var notifString = item.NotificationTypeId == 1 ? "commented on your product" : "liked your product";
+
+            <tr>
+                <td>
+                    @if (item.SentDate.ToRelativeDate() != dateTuple)
+                    {
+                        <br />
+                        dateTuple = item.SentDate.ToRelativeDate();
+                        <span style="font-size: small; color:violet ">
+                            @item.SentDate.ToRelativeDate()
+                        </span>
+                        <hr style="color: royalblue" />
+                    }
+                    <div @if (item.IsNew) { @: class="newNotif"
+                                                                                                                                             }>
+                        @Html.ActionLink(item.FullName, "Index", "User", new { id = item.UserId }, new { style = "color: royalblue" })
+                        @notifString
+                        @Html.ActionLink(@item.ProductName, "Detail", "Product", new { id = item.ProductId }, new { style = "color: royalblue" }).
+                    </div>
+
+                </td>
+            </tr>
+        }
+        <tr><td><br /> <hr style="color: royalblue" /></td></tr>
+    </table>
+
+    <p>&nbsp;</p>
+    <div style="text-align: center">
+        @if (Model.HasPreviousPage)
+        {
+            @Html.ActionLink("Previous", "NotifList", new { page = Model.PageIndex - 1 })
+        }
+        @{
+        var startingPage = Model.PageIndex - Model.NPages;
+        if (startingPage < 0)
+        {
+            startingPage = 0;
+        }
+        var endingPage = Model.PageIndex + Model.NPages;
+        if (endingPage > Model.TotalPages - 1)
+        {
+            endingPage = Model.TotalPages - 1;
+        }
+        for (var i = startingPage; i <= endingPage; ++i)
+        {
+            if (i == Model.PageIndex)
+            {
+                <span>@(i + 1)</span>
+            }
+            else
+            {
+                <span>@Html.ActionLink((i + 1).ToString(), "NotifList", new { page = i })</span>
+            }
+        }
+        }
+        @if (Model.HasNextPage)
+        {
+            @Html.ActionLink("Next", "NotifList", new { page = Model.PageIndex + 1 })
+        }
+    </div>
+}
+<script>
+    $(".newNotif").each(function () {
+        $(this).fadeIn(1000).fadeOut(1000).fadeIn(1000).fadeOut(1000).fadeIn(1000);
+        $(this).attr("style", "background-color: whitesmoke");
+    });
+
+</script>

@@ -1,0 +1,19 @@
+﻿@if (@Session["UserId"] != null)
+{
+    var st = Html.Action("NotifCount", "Home").ToHtmlString().Equals("0") ? null : new { style = "font-weight: bold" };
+    <text>
+        @Html.ActionLink(string.Format("Hello, {0}!", User.Identity.Name), "Edit", "User")  @Html.ActionLink(string.Format("Notifications [{0}]", Html.Action("NotifCount", "Home")), "NotifList", "Home", null, st)
+        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+        {
+            @Html.AntiForgeryToken()
+            <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
+        }
+    </text>
+}
+else
+{
+    <ul>
+        <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>
+}

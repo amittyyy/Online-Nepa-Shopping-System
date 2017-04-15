@@ -1,0 +1,197 @@
+﻿@using OnlineShopping.Helpers
+@model PaginatedList<OnlineShopping.Models.ProductListingModel>
+@{
+    ViewBag.Title = "Cosmos On-line Shopping";
+}
+
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>Welcome to Cosmos On-line Shopping</h1>
+            </hgroup>
+            <p>
+                We let you conveniently buy and sell new and used products
+            </p>
+        </div>
+    </section>
+}
+
+@{
+    var list = Model.ToList();
+    int numberofitemsinarow = Convert.ToInt32(ViewBag.ItemsInRow);
+}
+<style>
+    .container {
+        position: relative;
+    }
+
+    .tag {
+        float: left;
+        position: absolute;
+        background-color: ghostwhite;
+    }
+
+    #nav ul {
+        display: none;
+    }
+
+    #nav li:hover > ul {
+        display: block;
+    }
+</style>
+<div class="container">
+    <table style="width: 100%">
+        <tr>
+            <td></td>
+            <td>
+                <span class="tag">
+                    <ul style="list-style: none" id="nav">
+                        <li>
+                           <strong>Apply Filter</strong> 
+                            @Html.Action("GetListOfCategories")
+                        </li>
+                    </ul>
+                </span>
+            </td>
+        </tr>
+        <tr style="text-align: left">
+            <td style="vertical-align: top; text-align: left">
+                <div id="newsticker-demo">
+                    <span style="font-size: medium; font-weight: 500" title="New products that other users add will show up here.">Recently Added</span>
+                    <hr />
+                    <div class="newsticker-jcarousellite">
+                        @Html.Action("ScrollList")
+                    </div>
+                    <div style="width: 100%; text-align: right">
+                        <a class="prev">&lt;&lt;</a>
+                        <a class="next">&gt;&gt;</a>
+                    </div>
+                </div>
+            </td>
+            <td style="vertical-align: top">
+                <table style="width: 120%">
+                    <tr>
+                        @for (var i = 0; i < list.Count(); ++i)
+                        {
+                            <td>
+                                <table>
+                                    <tr>
+                                        <td style="vertical-align:top; ">
+                                            <img style="height: 60px; width: 60px;" src=@string.Concat("../../Images/Products/", (string.IsNullOrEmpty(list[i].Image))?"noimage.jpg": list[i].Image) alt="@list[i].ProductName" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-size: smaller">@list[i].Thumbs.Up Likes | @list[i].Thumbs.Down Dislikes | @list[i].Thumbs.Comments Comments</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>@Html.ActionLink(@list[i].ProductName.LimitWithElipsesOnWordBoundary(24), "Detail", "Product", new { id = list[i].ProductId }, new { title = list[i].ProductName }) </strong> @{if (!list[i].IsUsed)
+                                            {<span style="font-weight: bold">[N]</span>}}
+                                        </td>
+                                    </tr>
+                                    <tr><td>Price: RS: @list[i].Price /- </td></tr>
+                                    <tr>
+                                        <td>Category: @list[i].MainProductCategory</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Posted: @list[i].Added.ToShortDateString()
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Seller: @Html.ActionLink(list[i].FullName, "Index", "User", new { id = list[i].UserId }, null)
+                                        </td>
+                                    </tr>
+                                    @if (Session["UserName"] != null && Session["UserName"].ToString().StartsWith("admin", StringComparison.OrdinalIgnoreCase))
+                                    {<tr><td></td>@Html.ActionLink("Remove", "Delete", "Home", new { id = list[i].ProductId, uri = @Request.RawUrl }, new { title = "Remove " + list[i].ProductName })</tr>
+                                    }
+                                </table>
+                            </td>
+                            if (i + 1 >= numberofitemsinarow && (i + 1) % numberofitemsinarow == 0)
+                            { @:</tr><tr>
+                                }
+                        }
+                    </tr>
+
+                </table>
+            </td>
+
+        </tr>
+    </table>
+</div>
+<p>&nbsp;</p>
+<div style="text-align:center">
+    @if (Model.HasPreviousPage)
+    {
+        @Html.ActionLink("Previous", "Index", new { search = Model.SearchTerm, category = Model.Category, page = Model.PageIndex - 1 })
+    }
+    @{
+        var startingPage = Model.PageIndex - Model.NPages;
+        if (startingPage < 0)
+        {
+            startingPage = 0;
+        }
+        var endingPage = Model.PageIndex + Model.NPages;
+        if (endingPage > Model.TotalPages - 1)
+        {
+            endingPage = Model.TotalPages - 1;
+        }
+        for (var i = startingPage; i <= endingPage; ++i)
+        {
+            if (i == Model.PageIndex)
+            {
+                <span>@(i + 1)</span>
+            }
+            else
+            {
+                <span>@Html.ActionLink((i + 1).ToString(), "Index", new { search = Model.SearchTerm, category = Model.Category, page = i })</span>
+            }
+        }
+    }
+    @if (Model.HasNextPage)
+    {
+        @Html.ActionLink("Next", "Index", new { search = Model.SearchTerm, category = Model.Category, page = Model.PageIndex + 1 })
+    }
+</div>
+
+<script>
+    function makeLive(s) {
+        $(".newsticker-jcarousellite").jCarouselLite({
+            vertical: true,
+            visible: 10,
+            auto: 3000,
+            speed: 500,
+            circular: false,
+            btnNext: ".next",
+            btnPrev: ".prev",
+            start: s
+        });
+    }
+
+    setTimeout(rpt, 10000);
+
+    function rpt() {
+        var i = $('#maxPrdId').val();
+        $.ajax({
+            url: '@Url.Action("ScrollList", "Home")',
+            contentType: 'application/json; charset=utf-8',
+            type: 'get',
+            data: { lastProduct: i },
+            success: function (response) {
+                if (response.length > 1) {
+                    $('.newsticker-jcarousellite').html(response);
+                    var s = parseInt($('#startId').val());
+                    $(".newsticker-jcarousellite").jCarouselLite = null;
+                    $('.prev').unbind('click');
+                    $('.next').unbind('click');
+                    makeLive(s);
+                }
+            }
+        });
+        setTimeout(rpt, 10000);
+    }
+
+    makeLive(0);
+</script>

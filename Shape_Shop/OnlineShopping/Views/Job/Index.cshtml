@@ -1,0 +1,154 @@
+﻿@model OnlineShopping.Helpers.PaginatedList<OnlineShopping.Models.JobModel>
+
+@{
+    ViewBag.Title = "Jobs";
+}
+
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>Welcome to Cosmos Job Portal</h1>
+            </hgroup>
+            <p>
+                We let you conveniently post and find relevant jobs
+            </p>
+        </div>
+    </section>
+}
+
+<p>
+    <table style="width: 100%"><tr><td><h4>@Html.ActionLink("Post Job", "Create")</h4></td><td style="width: 30%">&nbsp;</td><td>Category: <select id="catJob"><option value="0">All</option><option value="1">Title</option><option value="2">Company</option><option value="3">Category</option></select> Search: <input style="width: 200px" type="text" id="searchJob" name="searchJob" value="@ViewBag.SearchJob" />  <input type="button" id="searchbtnjob" value="Search" /></td></tr></table>
+</p>
+
+@if (Model.Any())
+{
+    <table>
+        <tr>
+            <th>
+                Title
+            </th>
+            <th>
+                Company Name
+            </th>
+
+            <th>
+                Category
+            </th>
+            <th>
+                City
+            </th>
+            <th>
+                Last Date
+            </th>
+            <th>
+                Posted By
+            </th>
+            @if (Session["UserName"] != null && Session["UserName"].ToString().StartsWith("admin", StringComparison.OrdinalIgnoreCase))
+            {
+                <th>
+                    Remove
+                </th>
+            }
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.Title, "Detail", "Job", new { id = item.JobId }, null)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompanyName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CategoryName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.City)
+                </td>
+                <td>
+                    @item.LastDate.ToString("MMMM dd, yyyy") @if (item.LastDate.Date >= DateTime.Today)
+                    {
+                        <span>
+                            [@((item.LastDate.Date - DateTime.Today).Days)
+                            days left]
+                        </span>
+                    }
+                </td>
+                <td>
+                    @Html.ActionLink(item.UserName, "Index", "User", new { id = item.UserId }, null)
+                </td>
+
+                @if (Session["UserName"] != null && Session["UserName"].ToString().StartsWith("admin", StringComparison.OrdinalIgnoreCase))
+                {
+                    <td>
+                        @Html.ActionLink("Remove", "DeleteJob", "Admin", new { id = item.JobId, uri = Request.RawUrl }, null)
+                    </td>
+                }
+
+            </tr>
+        }
+
+    </table>
+}
+else
+{
+    <div>No jobs found.</div>
+}
+<p>&nbsp;</p>
+<div style="text-align:center">
+    @if (Model.HasPreviousPage)
+    {
+        @Html.ActionLink("Previous", "Index", new { search = Model.SearchTerm, category = Model.Category, page = Model.PageIndex - 1 })
+    }
+    @{
+        var startingPage = Model.PageIndex - Model.NPages;
+        if (startingPage < 0)
+        {
+            startingPage = 0;
+        }
+        var endingPage = Model.PageIndex + Model.NPages;
+        if (endingPage > Model.TotalPages - 1)
+        {
+            endingPage = Model.TotalPages - 1;
+        }
+        for (var i = startingPage; i <= endingPage; ++i)
+        {
+            if (i == Model.PageIndex)
+            {
+                <span>@(i + 1)</span>
+            }
+            else
+            {
+                <span>@Html.ActionLink((i + 1).ToString(), "Index", new { search = Model.SearchTerm, category = Model.Category, page = i })</span>
+            }
+        }
+    }
+    @if (Model.HasNextPage)
+    {
+        @Html.ActionLink("Next", "Index", new { search = Model.SearchTerm, category = Model.Category, page = Model.PageIndex + 1 })
+    }
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p style="font-size: smaller">
+    Disclaimer: We do not claim for fake job postings. The authenticity of the job and the post owner should be verified before making any decisions. Please see user details of the owner.
+</p>
+
+<script>
+    function redirectJob() {
+        window.location = '@Url.Content("~/Job/Index?search=")' + $("#searchJob").val() + '&category=' + $('#catJob').val();
+    }
+    $('#searchJob').on('keypress', function (event) {
+        if (event.which == '13') {
+
+            //Disable textbox to prevent multiple submit
+            $(this).attr("disabled", "disabled");
+
+            redirectJob();
+        }
+    });
+    $("#searchbtnjob").click(redirectJob);
+    $("#catJob").val(urlparse('category'));
+</script>
